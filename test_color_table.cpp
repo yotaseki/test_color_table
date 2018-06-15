@@ -53,12 +53,12 @@ int main(int argc, char **argv)
     ct.loadColorTable("color_table.cnf");
     ct.apply(img_ycrcb, img_label);
     getLabelImage(img_label, img_bin, obj_type);
-    cv::imshow("color",img);
     cv::imshow("bin",img_bin);
+    cv::imshow("color",img);
     cv::setMouseCallback("color",mouse_call_back,&m);
     while(1){
         int k = cv::waitKey(1);
-        int margin = 8;
+        int margin = 4;
         int width = 2;
         if( (m.event==cv::EVENT_LBUTTONDOWN) || ((m.event == cv::EVENT_MOUSEMOVE)&&(m.flags==cv::EVENT_FLAG_LBUTTON)) ){
             //std::cout << m.x << "," << m.y << std::endl;
@@ -79,8 +79,8 @@ int main(int argc, char **argv)
             cv::imshow("bin",img_bin);
         }
         else if( (m.event==cv::EVENT_RBUTTONDOWN) || ((m.event == cv::EVENT_MOUSEMOVE)&&(m.flags==cv::EVENT_FLAG_RBUTTON)) ){
-            margin = 16;
-            width = 8;
+            margin = 8;
+            width = 4;
             //std::cout << m.x << "," << m.y << std::endl;
             for(int cy=m.y-width/2; cy<m.y+width/2; cy++){
                 if( (0<=cy) && (cy<img.rows) ){
