@@ -20,10 +20,10 @@ link_directories(
 	${Boost_LIBRARY_DIR}
 )
 add_executable(detectUsingColorTable
-    ../../detector/color_table.h
-    ../../detector/convert_color.h
-    ../../detector/color_table.cpp
-    ../../detector/convert_color.cpp
+    ../../../detector/color_table.h
+    ../../../detector/convert_color.h
+    ../../../detector/color_table.cpp
+    ../../../detector/convert_color.cpp
     detectUsingColorTable.cpp
 )
 target_link_libraries(detectUsingColorTable
