@@ -1,4 +1,5 @@
 #include "test.h"
+#include "getFilename.h"
 Test_FCN::Test_FCN():num_tp(0),num_fp(0),num_tn(0),num_fn(0){
 }
 Test_FCN::~Test_FCN(){
