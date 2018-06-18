@@ -1,15 +1,13 @@
-#include "../../detector/color_table.h"
-#include "../../detector/convert_color.h"
+#include "../../../detector/color_table.h"
+#include "../../../detector/convert_color.h"
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 #include <bitset>
+namespace fs = boost::filesystem;
 
-#define LABEL_BACKGROUND = 0xFFFFFF;
-#define LABEL_BACKGROUND = 0xFFFFFF;
-#define LABEL_BACKGROUND = 0xFFFFFF;
-#define LABEL_BACKGROUND = 0xFFFFFF;
-#define LABEL_BACKGROUND = 0xFFFFFF;
+// arg1:input_dir, arg2:output_dir
 
 typedef struct ObjectColor{
     int background;
@@ -41,17 +39,33 @@ void getLabelImage(cv::Mat &src, cv::Mat &dst, int obj_type){
 
 int main(int argc, char **argv){
     int obj_type = 6; // whiteline
-    boost::filesystem::path p(argv[1]);
     ColorTable ct;
-    cv::Mat img = cv::imread(argv[1]);
-    cv::Mat img_ycrcb;
-    cv::cvtColor(img,img_ycrcb,CV_BGR2YCrCb);
-    cv::Mat img_label = cv::Mat(img.rows,img.cols,CV_16UC1);
-    cv::Mat img_bin = cv::Mat(img.rows,img.cols,CV_8UC1); //for visualize
     ct.loadColorTable("color_table.cnf");
-    ct.apply(img_ycrcb, img_label);
-    getLabelImage(img_label, img_bin, obj_type);
-    std::string fout(argv[2]);
-    fout = fout + "/ColorTable_" + p.filename().string();
-    imwrite(fout, img_bin);
+    const fs::path path(argv[1]);
+    std::vector<std::string> ext{".png",".jpg"};
+	BOOST_FOREACH(const fs::path& p, std::make_pair(fs::directory_iterator(path),
+				fs::directory_iterator())) {
+		if (!fs::is_directory(p))
+		{
+			fs::path extension = p.extension();
+            int matching = 0;
+            for(int i=0; i<ext.size(); i++)
+            {
+                matching |= (extension.generic_string() == ext[i]); 
+            }
+			if(matching)
+			{
+                cv::Mat img = cv::imread(p.c_str());
+                cv::Mat img_ycrcb;
+                cv::cvtColor(img,img_ycrcb,CV_BGR2YCrCb);
+                cv::Mat img_label = cv::Mat(img.rows,img.cols,CV_16UC1);
+                cv::Mat img_bin = cv::Mat(img.rows,img.cols,CV_8UC1); //for visualize
+                ct.apply(img_ycrcb, img_label);
+                getLabelImage(img_label, img_bin, obj_type);
+                std::string fout(argv[2]);
+                fout = fout + "/" + p.stem().string() + ".png";
+                imwrite(fout, img_bin);
+			}
+		}
+	}
 }
