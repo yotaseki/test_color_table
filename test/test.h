@@ -11,7 +11,6 @@ class Test_FCN
         double get_accuracy();
         double get_precision();
         double get_recall();
-    private:
         int num_tp;
         int num_tn;
         int num_fp;

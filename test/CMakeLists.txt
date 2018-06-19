@@ -8,7 +8,7 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 )
-add_executable(test_fcn
+add_executable(test
     main.cpp
     test.h
     test.cpp
