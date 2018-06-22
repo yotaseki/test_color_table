@@ -9,13 +9,13 @@ void Test_FCN::run_test(cv::Mat &pr, cv::Mat &gt)
     int width = gt.cols;
     for(int y=0;y<gt.rows;y++){
         for(int x=0;x<gt.cols;x++){
-            if(pr.data[y*width + x*pr.channels()] & gt.data[y*width + x*gt.channels()]){
+            if( (pr.data[y*pr.step + x*pr.elemSize()]) & (gt.data[y*gt.step + x*gt.elemSize()])){
                 this->num_tp++;
             }
-            else if(pr.data[y*width + x*pr.channels()]){
+            else if(pr.data[y*pr.step + x*pr.elemSize()]){
                 this->num_fp++;
             }
-            else if(gt.data[y*width + x*gt.channels()]){
+            else if(gt.data[y*pr.step + x*pr.elemSize()]){
                 this->num_fn++;
             }
             else{
