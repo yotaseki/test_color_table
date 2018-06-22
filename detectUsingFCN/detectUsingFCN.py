@@ -43,6 +43,7 @@ def predict(path,filename):
     np.copyto(out_8, out, casting='unsafe')
     img = Image.fromarray(out_8)
     filename = filename.rstrip('.jpg')
+    filename = argv[2]+"/"+filename
     if filetype == 'RGBA':
         im = im.convert("RGBA")
         img = img.convert("RGBA")
@@ -64,13 +65,13 @@ def predict(path,filename):
         img.save(argv[2]+"/"+filename)
     elif filetype == 'text':
         filename = filename + ".txt"
-        np.savetxt(filename,out_8)
+        np.savetxt(filename,out_8, fmt='%d',delimiter=',')
     else:
         gray = img.convert("L")
         filename = filename + ".png"
         gray.save(argv[2]+"/"+filename)
-    print(filetype),
-    print(filename)
+    #print(filetype),
+    #print(filename)
 
 if __name__=='__main__':
     argv = sys.argv

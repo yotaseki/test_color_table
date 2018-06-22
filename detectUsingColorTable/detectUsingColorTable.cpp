@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <bitset>
+#include <fstream>
 namespace fs = boost::filesystem;
 
 // arg1:input_dir, arg2:output_dir
@@ -38,6 +39,7 @@ void getLabelImage(cv::Mat &src, cv::Mat &dst, int obj_type){
 }
 
 int main(int argc, char **argv){
+    std::string filetype = "text"; //text , gray, binary, compose
     int obj_type = 6; // whiteline
     ColorTable ct;
     ct.loadColorTable("color_table.cnf");
@@ -63,8 +65,31 @@ int main(int argc, char **argv){
                 ct.apply(img_ycrcb, img_label);
                 getLabelImage(img_label, img_bin, obj_type);
                 std::string fout(argv[2]);
-                fout = fout + "/" + p.stem().string() + ".png";
-                imwrite(fout, img_bin);
+                if(filetype == "text"){
+                    fout = fout + "/" + p.stem().string() + ".txt";
+                    std::cout << fout << std::endl;
+                    std::ofstream ofs(fout);
+                    for(int y=0;y<img_bin.rows;y++){
+                        for(int x=0;x<img_bin.cols;x++){
+                            if(x){
+                                ofs << ",";
+                            }
+                            if(img_bin.data[(y * img_bin.cols + x)*img_bin.channels()]>0){
+                                ofs << "1";
+                            }
+                            else{
+                                ofs << "0";
+                            }
+                        }
+                        ofs << std::endl;
+                    }
+                    ofs.close();
+                }
+                else if(filetype == "binary"){
+                    fout = fout + "/" + p.stem().string() + ".png";
+                    std::cout << fout << std::endl;
+                    imwrite(fout, img_bin);
+                }
 			}
 		}
 	}
