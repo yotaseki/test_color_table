@@ -31,47 +31,47 @@ def predict(path,filename):
     tic = time.clock()
     net.forward()
     toc = time.clock()
-    print(path + filename + ':' + str(toc-tic) + 'sec')
     blobs = net.blobs['score_2classes'].data[0]
     #print(blobs.shape)
     out = blobs.argmax(axis=0)
-    threshold = 0;
     out_t =  blobs.max(axis=0)
-    out_t =  out_t >= threshold
-    out = np.logical_and(out, out_t)
     out_8 = np.empty_like(out, dtype=np.uint8)
-    np.copyto(out_8, out, casting='unsafe')
-    img = Image.fromarray(out_8)
-    filename = filename.rstrip('.jpg')
-    filename = argv[2]+"/"+filename
-    if filetype == 'RGBA':
-        im = im.convert("RGBA")
-        img = img.convert("RGBA")
-        cols,rows = img.size
-        for x in range(cols):
-            for y in range(rows):
-                if img.getpixel((x,y))[0] + img.getpixel((x,y))[1] + img.getpixel((x,y))[2] != 0:
-                    img.putpixel((x,y),r_a)
-                else:
-                    img.putpixel((x,y),(0,0,0,0))
+    print(filename + ':' + str(toc-tic) + 'sec')
+    for threshold in range(101):
+        out_t =  out_t >= threshold
+        out = np.logical_and(out, out_t)
+        np.copyto(out_8, out, casting='unsafe')
+        img = Image.fromarray(out_8)
+        out_name = filename.rstrip('.jpg')
+        thre_dir = 'thre' + str(threshold).zfill(3) + '/'
+        if filetype == 'RGBA':
+            im = im.convert("RGBA")
+            img = img.convert("RGBA")
+            cols,rows = img.size
+            for x in range(cols):
+                for y in range(rows):
+                    if img.getpixel((x,y))[0] + img.getpixel((x,y))[1] + img.getpixel((x,y))[2] != 0:
+                        img.putpixel((x,y),r_a)
+                    else:
+                        img.putpixel((x,y),(0,0,0,0))
 
-        result = Image.alpha_composite(im,img)
-        filename = filename + ".png"
-        result.save(argv[2]+"/"+filename)
-    elif filetype == 'binary':
-        img = img.convert('L')
-        img = img.point(lambda x: 255 if x>0 else 0)
-        filename = filename + ".png"
-        img.save(argv[2]+"/"+filename)
-    elif filetype == 'text':
-        filename = filename + ".txt"
-        np.savetxt(filename,out_8, fmt='%d',delimiter=',')
-    else:
-        gray = img.convert("L")
-        filename = filename + ".png"
-        gray.save(argv[2]+"/"+filename)
-    #print(filetype),
-    #print(filename)
+            result = Image.alpha_composite(im,img)
+            out_name = argv[2]+"/"+thre_dir + out_name + ".png"
+            result.save(out_name)
+        elif filetype == 'binary':
+            img = img.convert('L')
+            img = img.point(lambda x: 255 if x>0 else 0)
+            out_name = argv[2] +"/"+ thre_dir + out_name + ".png"
+            img.save(out_name)
+        elif filetype == 'text':
+            out_name = argv[2] +"/"+ thre_dir + out_name + ".txt"
+            np.savetxt(out_name,out_8, fmt='%d',delimiter=',')
+        else:
+            gray = img.convert("L")
+            out_name = argv[2] +"/"+ thre_dir +  out_name + ".png"
+            gray.save(out_name)
+        #print(filetype),
+        #print(out_name)
 
 if __name__=='__main__':
     argv = sys.argv
@@ -80,8 +80,8 @@ if __name__=='__main__':
     #SoccerField3D_Blur.fcn-8s-digits/deploy.prototxt
     #SoccerField3D_Blur.fcn-8s-digits/snapshot_iter_10010.caffemodel
     filetype = 'text'
-    deploy = "/mnt/Trancend2T/hdd/workspace/models/wearout/deploy.prototxt"
-    model = "/mnt/Trancend2T/hdd/workspace/models/wearout/snapshot_iter_10000.caffemodel"
+    deploy = "/mnt/Trancend2T/hdd/workspace/models/both/deploy.prototxt"
+    model = "/mnt/Trancend2T/hdd/workspace/models/both/snapshot_iter_10000.caffemodel"
     net = caffe.Net(
             deploy,
             model,
