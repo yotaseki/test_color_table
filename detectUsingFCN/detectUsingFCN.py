@@ -31,19 +31,19 @@ def predict(path,filename):
     tic = time.clock()
     net.forward()
     toc = time.clock()
-    blobs = net.blobs['score_2classes'].data[0]
+    blobs = net.blobs['prob'].data[0]
     #print(blobs.shape)
-    out = blobs.argmax(axis=0)
-    out_t =  blobs.max(axis=0)
-    out_8 = np.empty_like(out, dtype=np.uint8)
-    print(filename + ':' + str(toc-tic) + 'sec')
-    for threshold in range(101):
-        out_t =  out_t >= threshold
-        out = np.logical_and(out, out_t)
+    out_argmax = blobs.argmax(axis=0)
+    out_max =  blobs.max(axis=0)
+    #print(out_t)
+    for i in range(101):
+        threshold = float(i)/100.0
+        out =  (out_max >= threshold)
+        out_8 = np.empty_like(out, dtype=np.uint8)
         np.copyto(out_8, out, casting='unsafe')
         img = Image.fromarray(out_8)
         out_name = filename.rstrip('.jpg')
-        thre_dir = 'thre' + str(threshold).zfill(3) + '/'
+        t_dir = "thre" + str(i).zfill(3) + "/"
         if filetype == 'RGBA':
             im = im.convert("RGBA")
             img = img.convert("RGBA")
@@ -56,22 +56,22 @@ def predict(path,filename):
                         img.putpixel((x,y),(0,0,0,0))
 
             result = Image.alpha_composite(im,img)
-            out_name = argv[2]+"/"+thre_dir + out_name + ".png"
+            out_name = argv[2]+"/"+ t_dir + out_name + ".png"
             result.save(out_name)
         elif filetype == 'binary':
             img = img.convert('L')
             img = img.point(lambda x: 255 if x>0 else 0)
-            out_name = argv[2] +"/"+ thre_dir + out_name + ".png"
+            out_name = argv[2] +"/" + t_dir+ out_name + ".png"
             img.save(out_name)
         elif filetype == 'text':
-            out_name = argv[2] +"/"+ thre_dir + out_name + ".txt"
+            out_name = argv[2] +"/"+ t_dir+ out_name + ".txt"
             np.savetxt(out_name,out_8, fmt='%d',delimiter=',')
         else:
             gray = img.convert("L")
-            out_name = argv[2] +"/"+ thre_dir +  out_name + ".png"
+            out_name = argv[2] +"/"+ t_dir+ out_name + ".png"
             gray.save(out_name)
-        #print(filetype),
-        #print(out_name)
+    #print(filetype),
+    #print(out_name)
 
 if __name__=='__main__':
     argv = sys.argv
