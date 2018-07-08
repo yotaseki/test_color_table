@@ -12,6 +12,8 @@ add_executable(test
     main.cpp
     test.h
     test.cpp
+    rcsv.h
+    rcsv.cpp
     getFilename.h
     getFilename.cpp
 )
