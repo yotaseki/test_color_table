@@ -33,43 +33,43 @@ def predict(path,filename):
     toc = time.clock()
     blobs = net.blobs['prob'].data[0]
     #print(blobs.shape)
-    out_argmax = blobs.argmax(axis=0)
-    out_max =  blobs.max(axis=0)
-    #print(out_t)
-    for i in range(101):
-        threshold = float(i)/100.0
-        out =  (out_max >= threshold)
-        out_8 = np.empty_like(out, dtype=np.uint8)
-        np.copyto(out_8, out, casting='unsafe')
-        img = Image.fromarray(out_8)
-        out_name = filename.rstrip('.jpg')
-        t_dir = "thre" + str(i).zfill(3) + "/"
-        if filetype == 'RGBA':
-            im = im.convert("RGBA")
-            img = img.convert("RGBA")
-            cols,rows = img.size
-            for x in range(cols):
-                for y in range(rows):
-                    if img.getpixel((x,y))[0] + img.getpixel((x,y))[1] + img.getpixel((x,y))[2] != 0:
-                        img.putpixel((x,y),r_a)
-                    else:
-                        img.putpixel((x,y),(0,0,0,0))
+    #out_argmax = blobs.argmax(axis=0)
+    #out_max =  blobs.max(axis=0)
+    out =  blobs[1] # whiteline
+    #print(out)
+    out_t =  out
+    out_8 = np.empty_like(out_t, dtype=np.uint8)
+    np.copyto(out_8, out_t, casting='unsafe')
+    img = Image.fromarray(out_8)
+    out_name = filename.rstrip('.jpg')
+    #t_dir = "thre" + str(i).zfill(3) + "/"
+    t_dir = ""
+    if filetype == 'RGBA':
+        im = im.convert("RGBA")
+        img = img.convert("RGBA")
+        cols,rows = img.size
+        for x in range(cols):
+            for y in range(rows):
+                if img.getpixel((x,y))[0] + img.getpixel((x,y))[1] + img.getpixel((x,y))[2] != 0:
+                    img.putpixel((x,y),r_a)
+                else:
+                    img.putpixel((x,y),(0,0,0,0))
 
-            result = Image.alpha_composite(im,img)
-            out_name = argv[2]+"/"+ t_dir + out_name + ".png"
-            result.save(out_name)
-        elif filetype == 'binary':
-            img = img.convert('L')
-            img = img.point(lambda x: 255 if x>0 else 0)
-            out_name = argv[2] +"/" + t_dir+ out_name + ".png"
-            img.save(out_name)
-        elif filetype == 'text':
-            out_name = argv[2] +"/"+ t_dir+ out_name + ".txt"
-            np.savetxt(out_name,out_8, fmt='%d',delimiter=',')
-        else:
-            gray = img.convert("L")
-            out_name = argv[2] +"/"+ t_dir+ out_name + ".png"
-            gray.save(out_name)
+        result = Image.alpha_composite(im,img)
+        out_name = argv[2]+"/"+ t_dir + out_name + ".png"
+        result.save(out_name)
+    elif filetype == 'binary':
+        img = img.convert('L')
+        img = img.point(lambda x: 255 if x>0 else 0)
+        out_name = argv[2] +"/" + t_dir+ out_name + ".png"
+        img.save(out_name)
+    elif filetype == 'text':
+        out_name = argv[2] +"/"+ t_dir+ out_name + ".txt"
+        np.savetxt(out_name,out, fmt='%lf',delimiter=',')
+    else:
+        gray = img.convert("L")
+        out_name = argv[2] +"/"+ t_dir+ out_name + ".png"
+        gray.save(out_name)
     #print(filetype),
     #print(out_name)
 
