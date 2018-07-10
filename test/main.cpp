@@ -45,16 +45,16 @@ int main(int argc, char **argv)
         }
         std::cout << " --- threshold:" << thre << " --- "<< std::endl;
         std::cout << "accuracy:" << test.get_accuracy()<< std::endl;
-        std::cout << "precision:" << test.get_precision()<< std::endl;
         std::cout << "recall:" << test.get_recall()<< std::endl;
+        std::cout << "precision:" << test.get_precision()<< std::endl;
         std::cout << "F-value:" << test.get_Fvalue() << std::endl;
         //ofs << "Filename,TP,TN,FP,FN,Accuracy,Precision,Recall"<< std::endl;
         if (!ret) {
             std::cout << "Create new file." << std::endl;
-            ofs << "Path,Threshold,TP,TN,FP,FN,F-value,Precision,Recall,Accuracy"<< std::endl;
+            ofs << "Path,Threshold,TP,TN,FP,FN,F-value,Recall,Precision,Accuracy"<< std::endl;
             ret = true;
         }
-        ofs << argv[2] << ","<< t <<"," << test.num_tp <<"," << test.num_tn <<"," << test.num_fp <<"," << test.num_fn <<"," << test.get_Fvalue() <<"," << test.get_precision() <<"," << test.get_recall() << ","<< test.get_accuracy() << std::endl;
+        ofs << argv[2] << ","<< t <<"," << test.num_tp <<"," << test.num_tn <<"," << test.num_fp <<"," << test.num_fn <<"," << test.get_Fvalue() <<"," << test.get_recall() <<"," << test.get_precision() << ","<< test.get_accuracy() << std::endl;
     }
     return 0;
 }
