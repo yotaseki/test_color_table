@@ -21,3 +21,16 @@ target_link_libraries(test
 	${Boost_LIBRARIES}
     ${OpenCV_LIBS}
 )
+add_executable(outputImg
+    main.cpp
+    test.h
+    test.cpp
+    rcsv.h
+    rcsv.cpp
+    getFilename.h
+    getFilename.cpp
+)
+target_link_libraries(outputImg
+	${Boost_LIBRARIES}
+    ${OpenCV_LIBS}
+)

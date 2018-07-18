@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     std::ofstream ofs("result.csv",std::ios_base::app);
     std::string f1(argv[1]);
     std::string f2(argv[2]);
-    for(int thre=0; thre<=100; thre++){
+    for(int thre=96; thre<=96; thre++){
         double t = (double)thre/100.0;
         Test_FCN test;
         std::vector<std::string> ext{".png",".jpg"};
