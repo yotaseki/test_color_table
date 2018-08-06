@@ -12,7 +12,7 @@ import glob
 # argv[2] = path2output_dir
 
 def main():
-    files = [x.split('/')[-1] for x in glob.glob(argv[1] + "/*.jpg")]
+    files = [x.split('/')[-1] for x in glob.glob(argv[1] + "/*.png")]
     for f in files:
         predict(argv[1],f)
 
@@ -41,7 +41,7 @@ def predict(path,filename):
     out_8 = np.empty_like(out_t, dtype=np.uint8)
     np.copyto(out_8, out_t, casting='unsafe')
     img = Image.fromarray(out_8)
-    out_name = filename.rstrip('.jpg')
+    out_name = filename.rstrip('.png')
     #t_dir = "thre" + str(i).zfill(3) + "/"
     t_dir = ""
     if filetype == 'RGBA':
@@ -65,6 +65,7 @@ def predict(path,filename):
         img.save(out_name)
     elif filetype == 'text':
         out_name = argv[2] +"/"+ t_dir+ out_name + ".txt"
+        print(out_name)
         np.savetxt(out_name,out, fmt='%lf',delimiter=',')
     else:
         gray = img.convert("L")
@@ -80,8 +81,8 @@ if __name__=='__main__':
     #SoccerField3D_Blur.fcn-8s-digits/deploy.prototxt
     #SoccerField3D_Blur.fcn-8s-digits/snapshot_iter_10010.caffemodel
     filetype = 'text'
-    deploy = "/mnt/Trancend2T/hdd/workspace/models/both/deploy.prototxt"
-    model = "/mnt/Trancend2T/hdd/workspace/models/both/snapshot_iter_10000.caffemodel"
+    deploy = "deploy.prototxt"
+    model = "/home/yota/Desktop/Research/DetectWhiteline/Training/20180801_simu_morning/20180803-212252-e594/snapshot_iter_27810.caffemodel"
     net = caffe.Net(
             deploy,
             model,
