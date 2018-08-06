@@ -21,8 +21,8 @@ target_link_libraries(test
 	${Boost_LIBRARIES}
     ${OpenCV_LIBS}
 )
-add_executable(outputImg
-    main.cpp
+add_executable(getImage
+    getImage.cpp
     test.h
     test.cpp
     rcsv.h
@@ -30,7 +30,7 @@ add_executable(outputImg
     getFilename.h
     getFilename.cpp
 )
-target_link_libraries(outputImg
+target_link_libraries(getImage
 	${Boost_LIBRARIES}
     ${OpenCV_LIBS}
 )

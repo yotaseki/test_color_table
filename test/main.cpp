@@ -15,8 +15,8 @@ int main(int argc, char **argv)
     std::ofstream ofs("result.csv",std::ios_base::app);
     std::string f1(argv[1]);
     std::string f2(argv[2]);
-    for(int thre=96; thre<=96; thre++){
-        double t = (double)thre/100.0;
+    for(int thre=0; thre<=1000; thre++){
+        double t = (double)thre/1000.0;
         Test_FCN test;
         std::vector<std::string> ext{".png",".jpg"};
         BOOST_FOREACH(const fs::path& p, std::make_pair(fs::directory_iterator(argv[1]),fs::directory_iterator())){
@@ -39,6 +39,7 @@ int main(int argc, char **argv)
                         cv::cvtColor(ground_truth,ground_truth,CV_BGR2GRAY);
                         //cv::cvtColor(predict,predict,CV_BGR2GRAY);
                         test.run_test_csv(predict.data, ground_truth, t);
+                        //test.run_test(predict.data, ground_truth);
                     }
                 }
             }

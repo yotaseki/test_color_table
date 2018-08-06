@@ -5,10 +5,14 @@ Test_FCN::Test_FCN():num_tp(0),num_fp(0),num_tn(0),num_fn(0){
 Test_FCN::~Test_FCN(){
 }
 void Test_FCN::run_test(cv::Mat &pr, cv::Mat &gt){
-    int width = gt.cols;
+    int gwidth = gt.cols;
+    int pwidth = pr.cols;
     for(int y=0;y<gt.rows;y++){
         for(int x=0;x<gt.cols;x++){
-            Result(pr.data[y*pr.step + x*pr.elemSize()], gt.data[y*gt.step + x*gt.elemSize()] );
+            //Result(pr.data[y*pr.step + x*pr.elemSize()], gt.data[y*gt.step + x*gt.elemSize()] );
+            int p = pr.data[(y * pwidth + x)*pr.channels()];
+            int g = gt.data[(y * gwidth + x)*gt.channels()];
+            Result(p, g);
         }
     }
 }
@@ -21,10 +25,12 @@ void Test_FCN::CSV2Mat(std::vector<std::vector<double> > &src, cv::Mat &dst, dou
     int cols = src[0].size();
     int rows = src.size();
     cv::Mat m = cv::Mat::zeros(cv::Size(cols, rows), CV_8UC1);
+    int width = m.cols;
     for(int y=0; y<rows; y++){
         for(int x=0; x<cols; x++){
-            int th = (src[y][x] > thre)?1:0;
-            m.data[y*m.step + x*m.elemSize()] = th;
+            int th = (src[y][x] >= thre)?1:0;
+            //m.data[y*m.step + x*m.elemSize()] = th;
+            m.data[(y * width + x)*m.channels()] = th;
         }
     }
     dst = m.clone();

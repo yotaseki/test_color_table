@@ -32,6 +32,7 @@ void RCSV::splitLine(const string &str, string delimiter, vector<double> &ret){
     }
     std::stringstream buf(item);
     while(buf >> item) {
+        //std::cout << item << std::endl;
         double d = stod(item);
         ret.push_back(d);
     }

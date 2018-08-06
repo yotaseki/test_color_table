@@ -47,6 +47,8 @@ def predict(path,filename):
     if filetype == 'RGBA':
         im = im.convert("RGBA")
         img = img.convert("RGBA")
+        print(np.array(im).shape)
+        print(np.array(img).shape)
         cols,rows = img.size
         for x in range(cols):
             for y in range(rows):
@@ -82,7 +84,7 @@ if __name__=='__main__':
     #SoccerField3D_Blur.fcn-8s-digits/snapshot_iter_10010.caffemodel
     filetype = 'text'
     deploy = "deploy.prototxt"
-    model = "/home/yota/Desktop/Research/DetectWhiteline/Training/20180801_simu_morning/20180803-212252-e594/snapshot_iter_27810.caffemodel"
+    model = "/home/yota/Desktop/Research/DetectWhiteline/Training/20180804-164246-10b5/snapshot_iter_9270.caffemodel"
     net = caffe.Net(
             deploy,
             model,
